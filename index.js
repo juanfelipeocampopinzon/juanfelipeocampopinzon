@@ -1,79 +1,87 @@
 // const http = require("http"),// common.js
-//nmy scrypt modules ('import http from "http"')
+// nmy scrypt modules ('import http from "http"')
 // const { response } = require("express")
-const express = require("express")
+/// const { response } = require('express')
+const express = require('express')
+const cors = require('cors')
+
 const app = express()
+const logger = require('./loggerMiddleware')
+
+app.use(cors())
 app.use(express.json())
 
-let notes =  [ 
+app.use(logger)
+
+let notes = [
   {
-    "id": 1,
-    "date": "2001",
-    "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-    "body":  true
+    id: 1,
+    title: 'cafe aut facere repellat provident occaecati excepturi optio reprehenderit',
+    date: '2001',
+    body: true
   },
   {
-    "id": 2,
-    "date": "2002 ",
-    "title": "qui est esse",
-    "body":  false
+    id: 2,
+    title: 'qui est esse',
+    date: '2002 ',
+    body: false
   },
   {
-    "id": 3,
-    "date": "2003",
-    "title": "ea molestias quasi exercitationem repellat qui ipsa sit aut",
-    "body":  false
-  },
+    id: 3,
+    title: 'ea molestias quasi exercitationem repellat qui ipsa sit aut',
+    date: '2003',
+    body: false
+  }
 ]
 
-//const app = http.createServer((request, response) => {
-//  response.writeHead(200, { "Content-Type": "application/json" })
-//  response.end(JSON.stringify(notes))
-//})
+//  const app = http.createServer((request, response) => {
+//    response.writeHead(200, { "title-Type": "application/json" })
+//    response.end(JSON.stringify(notes))
+//  })
 
-app.get("/",(request, response) => {
-    response.send("<h1>hola mundo</h1>")
+app.get('/', (request, response) => {
+  response.send('<h1>hola mundo</h1>')
 })
 
-app.get("/api/notes",(request, response) => {
-    response.json(notes)
+app.get('/api/notes', (request, response) => {
+  response.json(notes)
 })
 
-app.get("/api/notes/:id",(request, response) => {
-    const id = Number(request.params.id)
-    console.log({id})
-    const note = notes.find(note =>note.id === id)
+app.get('/api/notes/:id', (request, response) => {
+  const id = Number(request.params.id)
+  console.log({ id })
+  const note = notes.find(note => note.id === id)
 
-    if (note) {
-        response.json(note)
-    }   else  {
-        response.status(404).end()
-    }
+  if (note) {
     response.json(note)
+  } else {
+    response.status(404).end()
+  }
+  response.json(note)
 })
 
-app.delete("/api/notes/:id",(request, response) => {
-    const id = Number(request.params.id)
-    notes = notes.filter(note => note.id != id)  //esto esta mal debo mirar como hago el simbolo de diferente
-    response.status(204).end()
+app.delete('/api/notes/:id', (request, response) => {
+  const id = Number(request.params.id)
+  notes = notes.filter(note => note.id !== id)
+  response.status(204).end()
 })
 
-app.post("/api/notes/",(request, response) => {
+app.post('/api/notes/', (request, response) => {
   const note = request.body
 
-  if (!note || !note.content) {
+  if (!note || !note.title) {
     return response.status(400).json({
-      error: 'note.content falta'
+      error: 'note.title falta'
     })
   }
 
   const ids = notes.map(note => note.id)
-  const maxid = Math.max (...ids)
+  const maxid = Math.max(...ids)
 
   const newNote = {
     id: maxid + 1,
-    content: note.content,
-    body: typeof note.body != 'undefined' ? note.body : false,
+    title: note.title,
+    body: typeof note.body !== 'undefined' ? note.body : false,
     date: new Date().toISOString()
   }
   notes = notes.concat(newNote)
@@ -81,9 +89,15 @@ app.post("/api/notes/",(request, response) => {
   response.status(201).json(newNote)
 })
 
-const PORT = 3001
-app.listen(PORT, () => {
-  console.log("server corriendo ${PORT}" )
+app.use((request, response) => {
+  response.status(404).json({
+    error: 'No encontrado'
+  })
 })
-//)
-//console.log('server running on port ${Port}')
+
+const PORT = process.env.PORT || 3001 // const PORT = 3001
+app.listen(PORT, () => {
+  console.log('server corriendo en puerto')
+})
+//  )
+//  console.log('server running on port ${Port}')
