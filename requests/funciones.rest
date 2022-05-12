@@ -1,0 +1,24 @@
+//agregar nota 
+POST http://localhost:3001/api/notes/
+Content-Type: application/json
+
+{
+  "title" : "hola",
+  "body" : true
+}
+
+###
+//probar error si contenido
+POST http://localhost:3001/api/notes/
+Content-Type: application/json
+
+{
+}
+
+###
+// eliminar nota especifica
+DELETE http://localhost:3001/api/notes/2
+
+###
+//mostrar notas
+GET http://localhost:3001/api/notes/
