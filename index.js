@@ -16,24 +16,23 @@ app.use(logger)
 let notes = [
   {
     id: 1,
-    title: 'cafe aut facere repellat provident occaecati excepturi optio reprehenderit',
+    usuario: 'pepito',
     date: '2001',
     body: true
   },
   {
     id: 2,
-    title: 'qui est esse',
+    usuario: 'manuel',
     date: '2002 ',
     body: false
   },
   {
     id: 3,
-    title: 'ea molestias quasi exercitationem repellat qui ipsa sit aut',
+    usuario: 'maicol',
     date: '2003',
     body: false
   }
 ]
-
 //  const app = http.createServer((request, response) => {
 //    response.writeHead(200, { "title-Type": "application/json" })
 //    response.end(JSON.stringify(notes))
@@ -69,9 +68,9 @@ app.delete('/api/notes/:id', (request, response) => {
 app.post('/api/notes/', (request, response) => {
   const note = request.body
 
-  if (!note || !note.title) {
+  if (!note || !note.usuario) {
     return response.status(400).json({
-      error: 'note.title falta'
+      error: 'note.user falta'
     })
   }
 
@@ -80,7 +79,7 @@ app.post('/api/notes/', (request, response) => {
 
   const newNote = {
     id: maxid + 1,
-    title: note.title,
+    usuario: note.usuario,
     body: typeof note.body !== 'undefined' ? note.body : false,
     date: new Date().toISOString()
   }
